@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arqivo LLP — Company Website
 
-## Getting Started
+Marketing website for **Arqivo LLP**, a business process outsourcing company.
+Built with Next.js 16 (App Router, Cache Components), TypeScript and Tailwind CSS v4.
 
-First, run the development server:
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build && npm start   # production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` and fill in the values.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Editing content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| What | Where |
+| --- | --- |
+| Company name, phones, email, hours, leader | `src/lib/site.ts` |
+| Services (cards, detail pages, FAQs) | `src/lib/services.ts` |
+| Industries | `src/lib/industries.ts` |
+| Home page sections & highlight numbers | `src/app/page.tsx` |
+| Brand colours & fonts | `src/app/globals.css` (`@theme`) |
+| Logo | `src/assets/arqivo-mark.png` (also `public/brand/`) |
 
-## Learn More
+Adding a service to `services.ts` automatically creates its page, menu entry, footer link and sitemap entry.
 
-To learn more about Next.js, take a look at the following resources:
+## Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`/`, `/about`, `/services`, `/services/[slug]` (8 statically generated pages), `/industries`, `/careers`, `/contact`, `/privacy`, plus a custom 404.
+SEO: per-page metadata, Open Graph image, favicon/app icons generated from the logo, `sitemap.xml`, `robots.txt`, web manifest and JSON-LD (Organization, Service, FAQ).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contact form
 
-## Deploy on Vercel
+`src/app/contact/actions.ts` is a Server Action. With `RESEND_API_KEY` set, enquiries are emailed to `CONTACT_TO_EMAIL`. Without it, the form validates and then offers a pre-filled email to the company address, so it works out of the box.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Performance notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- All pages are prerendered; no client-side data fetching.
+- Only the mobile menu, nav active state and contact form ship client JavaScript.
+- Scroll reveal animations are pure CSS (`animation-timeline: view()`), with reduced-motion support.
+- Fonts are self-hosted via `next/font`; images served as AVIF/WebP via `next/image`.
+
+## Deploy
+
+Works on Vercel or any Node.js host (`npm run build && npm start`). Set `NEXT_PUBLIC_SITE_URL` to the live domain.
